@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.AttendanceRecordDao">
+
+    <select id="findById" resultMap="resultMapper">
+        select * from attendance_record_sheet where `emp_id`=#{id}
+    </select>
+
+    <select id="findByExactDay" resultType="com.nju.edu.erp.model.po.AttendanceRecordPO">
+        select * from attendance_record_sheet where `time`=#{date}
+    </select>
+
+    <select id="findByDate" resultType="com.nju.edu.erp.model.po.AttendanceRecordPO">
+        select * from attendance_record_sheet where `time`>=#{beginDate} and #{endDate}>=`time`
+    </select>
+
+    <insert id="createRecord" parameterType="AttendanceRecordPO">
+        insert into attendance_record_sheet(`emp_id`, `time`)
+        values (#{empId}, #{date});
+    </insert>
+
+    <resultMap id="resultMapper" type="com.nju.edu.erp.model.po.AttendanceRecordPO">
+        <result column="emp_id" property="empId"></result>
+        <result column="time" property="date"></result>
+    </resultMap>
+
+
+</mapper>

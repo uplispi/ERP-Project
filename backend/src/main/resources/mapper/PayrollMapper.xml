@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.PayrollDao">
+    <select id="queryAll" resultType="com.nju.edu.erp.model.po.PayrollPO">
+        select create_time as createTime, payroll_sheet.id as id, operator as operator, employee_id as employeeId,
+               bank_card as bankCard, payable_wages as payableWages, unemployment_insurance as unemploymentInsurance,
+               personal_income_tax as personalIncomeTax, housing_provident_fund  as housingProvidentFund,
+               actual_amount_issued as actualAmountIssued, actual_amount_issued as actualAmountIssued,
+               state as state, name as name
+        from  payroll_sheet
+    </select>
+
+    <insert id="creaeSheet" parameterType="com.nju.edu.erp.model.po.PayrollPO">
+        insert into payroll_sheet(id, operator, create_time, employee_id, payable_wages, unemployment_insurance, personal_income_tax, housing_provident_fund, actual_amount_issued, state, bank_card, name)
+        value(#{id}, #{operator}, #{createTime}, #{employeeId}, #{payableWages}, #{unemploymentInsurance}, #{personalIncomeTax}, #{housingProvidentFund},#{actualAmountIssued}, #{state}, #{bankCard}, #{name})
+    </insert>
+
+    <update id="update" parameterType="com.nju.edu.erp.model.po.PayrollPO">
+        update payroll_sheet
+        <set>
+            <if test="operator != null">`operator` = #{operator}, </if>
+            <if test="createTime != null">`create_time` = #{createTime}, </if>
+            <if test="employeeId != null">employee_id = #{employeeId},</if>
+            <if test="payableWages != null">payable_wages = #{payableWages},</if>
+            <if test="unemploymentInsurance != null">unemployment_insurance = #{unemploymentInsurance},</if>
+            <if test="personalIncomeTax != null">personal_income_tax = #{personalIncomeTax},</if>
+            <if test="housingProvidentFund != null">housing_provident_fund = #{housingProvidentFund},</if>
+            <if test="actualAmountIssued != null">actual_amount_issued = #{actualAmountIssued},</if>
+            <if test="state != null">state = #{state}</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteSheetByid">
+        delete from payroll_sheet where id = #{id}
+    </delete>
+
+    <select id="getLatest" resultType="com.nju.edu.erp.model.po.PayrollPO">
+        select id
+        from payroll_sheet order by id desc limit 0,1 ;
+    </select>
+
+
+
+    <select id="getDetail" resultType="com.nju.edu.erp.model.po.DetailPO">
+        select employee_sheet.id as id, type, basic_wage + ps.post_wage as basic, push_money as push,
+               year_end_bonus as bonus, times, employee_sheet.name, bank_card as bankCard
+        from employee_sheet
+        left join post_sheet ps on employee_sheet.post_id = ps.id
+        left join push_money_sheet sms on sms.emp_id  = employee_sheet.id
+        left join (select employee_id, year_end_bonus
+            from year_end_bonus_sheet where year = #{year}) as bonus_sheet  on employee_sheet.id = bonus_sheet.employee_id
+        left join (select emp_id, count(time) as times from attendance_record_sheet
+                   where attendance_record_sheet.time>= #{beginDate}
+                     and #{endDate}>=attendance_record_sheet.time
+                   group by emp_id) as attendance_sheet on attendance_sheet.emp_id = employee_sheet.id
+    </select>
+
+    <select id="getSheetById" resultType="com.nju.edu.erp.model.po.PayrollPO">
+        select *
+        from  payroll_sheet
+        where id = #{id}
+    </select>
+
+</mapper>

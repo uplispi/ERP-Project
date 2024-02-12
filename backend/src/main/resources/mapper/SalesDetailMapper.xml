@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.SalesDetailDao">
+
+    <select id="findSalesDetailInSalesSheet" resultType="com.nju.edu.erp.model.po.SalesDetailFormPO">
+        select product.name as name, product.type as type,
+        sale_returns_sheet.`create_time` as createTime,
+        sale_returns_sheet_content.quantity as quantity,
+        sale_returns_sheet_content.`unit_price` as unitPrice,
+        sale_returns_sheet_content.`total_price` as totalPrice,
+        '销售退货' as salesType,
+        product.id as pid,
+        salesman,
+        customer.name as customer,
+        customer.id as customerId
+        from product,sale_returns_sheet,sale_returns_sheet_content, customer
+        where product.id = sale_returns_sheet_content.pid
+        and sale_returns_sheet_content.sale_return_sheet_id = sale_returns_sheet.id
+        and customer.id = sale_returns_sheet.supplier
+        and sale_returns_sheet.state ='审批完成'
+        <if test="pid != null"> and sale_returns_sheet_content.pid = #{pid}</if>
+        <if test="customerId != null and customerId != 0"> and sale_returns_sheet.supplier = #{customerId}</if>
+        <if test="beforeTime != null">and sale_returns_sheet.create_time >=#{beforeTime}</if>
+        <if test="afterTime != null"> and #{afterTime} >= sale_returns_sheet.create_time</if>
+        <if test="salesman != null"> and salesman = #{salesman}</if>
+        union
+        select product.name as name, product.type as type, sale_sheet.`create_time` as createTime,
+               sale_sheet_content.quantity as quantity, sale_sheet_content.`unit_price` as unitPrice,
+               sale_sheet_content.`total_price` as totalPrice, '销售' as salesType, product.id as pid, salesman,
+               customer.name as customer, customer.id as customerId
+        from product,sale_sheet,sale_sheet_content, customer
+        where product.id = sale_sheet_content.pid
+        and sale_sheet_content.sale_sheet_id = sale_sheet.id
+        and customer.id = sale_sheet.supplier
+        and sale_sheet.state ='审批完成'
+        <if test="pid != null"> and sale_sheet_content.pid = #{pid}</if>
+        <if test="customerId != null and customerId != 0"> and sale_sheet.supplier = #{customerId}</if>
+        <if test="beforeTime != null">and sale_sheet.create_time >=#{beforeTime}</if>
+        <if test="afterTime != null"> and #{afterTime} >= sale_sheet.create_time</if>
+        <if test="salesman != null"> and sale_sheet.salesman = #{salesman}</if>
+    </select>
+
+</mapper>

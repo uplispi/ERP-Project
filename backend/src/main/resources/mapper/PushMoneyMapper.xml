@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.PushMoneyDao">
+    <select id="findById" resultType="com.nju.edu.erp.model.po.PushMoneyPO">
+        select * from push_money_sheet where emp_id=#{id}
+    </select>
+
+    <select id="findAll" resultType="com.nju.edu.erp.model.po.PushMoneyPO">
+        select * from push_money_sheet
+    </select>
+
+    <update id="update" parameterType="PushMoneyPO">
+        update push_money_sheet
+        <set>
+            <if test = "empId != null">`emp_id` = #{empId}, </if>
+            <if test = "pushMoney != null">`push_money` = #{pushMoney}, </if>
+        </set>
+        where emp_id = #{empId}
+    </update>
+
+    <insert id="createPushMoney" parameterType="PushMoneyPO">
+        insert into push_money_sheet(`emp_id`, `push_money`)
+        values (#{empId},#{pushMoney});
+    </insert>
+
+    <delete id="deleteById">
+        delete from push_money_sheet where `emp_id` = #{id};
+    </delete>
+
+    <resultMap id="PushMoneyPO" type="com.nju.edu.erp.model.po.PushMoneyPO">
+        <result column="emp_id" property="empId"></result>
+        <result column="push_money" property="pushMoney"></result>
+    </resultMap>
+
+</mapper>

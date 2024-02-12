@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.PromotionDao">
+
+    <insert id="save" useGeneratedKeys="true" keyProperty="id">
+        insert into promotion_strategy (id, `name`, discount, reduce, strategy, `start`, `end`, gift, `level`, gift_num) values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.id}, #{item.name}, #{item.discount},#{item.reduce},#{item.strategy},#{item.start},#{item.end}, #{item.gift}, #{item.level}, #{item.giftNum})
+        </foreach>
+    </insert>
+
+    <delete id="delete">
+        delete
+        from promotion_strategy
+        where id = #{id};
+    </delete>
+
+    <select id="getAll" resultType="com.nju.edu.erp.model.po.PromotionContentPO">
+        select * from promotion_strategy;
+    </select>
+
+    <select id="getById" resultType="com.nju.edu.erp.model.po.PromotionContentPO">
+        select * from promotion_strategy
+        where id = #{id}
+    </select>
+
+
+    <resultMap id="PromotionContentPO" type="com.nju.edu.erp.model.po.PromotionContentPO">
+            <id column="id" property="id"></id>
+            <result column="discount" property="discount"></result>
+            <result column="name" property="name"></result>
+            <result column="strategy" property="strategy"></result>
+            <result column="reduce" property="reduce"></result>
+            <result column="start_date" property="start"></result>
+            <result column="end_date" property="end"></result>
+            <result column="gift" property="gift"></result>
+            <result column="level" property="level"></result>
+            <result column="gift_num" property="giftNum"></result>
+    </resultMap>
+
+</mapper>

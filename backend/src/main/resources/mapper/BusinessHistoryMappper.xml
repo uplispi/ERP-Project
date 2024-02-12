@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.BusinessHistoryDao">
+    <select id="querySaleSheet" resultType="SaleSheetPO">
+        select *
+        from sale_sheet
+        where state = '审批完成'
+        <if test="beginDate != null">
+            and create_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and #{endDate} >= sale_sheet.create_time
+        </if>
+        <if test="customer != null and customer != 0 ">
+            and #{customer} = supplier
+        </if>
+        <if test="salesMan != null and salesMan != ''">
+            and #{salesMan} = salesman
+        </if>
+    </select>
+    <select id="querySaleReturnsSheet" resultType="SaleReturnsSheetPO">
+        select *
+        from sale_returns_sheet
+        where state = '审批完成'
+
+        <if test="beginDate != null">
+            and create_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and #{endDate} >= create_time
+        </if>
+        <if test="customer != null and customer != 0 ">
+            and #{customer} = supplier
+        </if>
+        <if test="salesMan != null and salesMan != ''">
+            and #{salesMan} = salesman
+        </if>
+    </select>
+    <select id="queryPurchaseSheet" resultType="PurchaseSheetPO">
+        select *
+        from purchase_sheet
+        where state = '审批完成'
+
+        <if test="beginDate != null">
+            and create_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and #{endDate} >= create_time
+        </if>
+        <if test="customer != null and customer != 0 ">
+            and #{customer} = supplier
+        </if>
+    </select>
+    <select id="queryPurchaseReturnsSheet" resultType="PurchaseReturnsSheetPO">
+        select *
+        from purchase_returns_sheet
+        where state = '审批完成'
+
+        <if test="beginDate != null">
+            and create_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and #{endDate} >= create_time
+        </if>
+    </select>
+    <select id="queryPaymentSheet" resultType="PaymentSheetPO">
+        select *
+        from payment_sheet
+        where state = '审批完成'
+
+        <if test="beginDate != null">
+            and create_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and #{endDate} >= create_time
+        </if>
+    </select>
+    <select id="queryCollectionSheet" resultType="CollectionSheetPO">
+        select *
+        from collection_sheet
+        where state = '审批完成'
+        <if test="beginDate != null">
+            and create_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and #{endDate} >= create_time
+        </if>
+    </select>
+    <select id="queryPayroll" resultType="PayrollPO">
+        select *
+        from payroll_sheet
+        where state = '审批完成'
+
+        <if test="beginDate != null">
+            and create_time >= #{beginDate}
+        </if>
+        <if test="endDate != null">
+            and #{endDate} >= create_time
+        </if>
+    </select>
+</mapper>

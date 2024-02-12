@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.nju.edu.erp.dao.PostDao">
+    <select id="findAllPosts" resultType="com.nju.edu.erp.model.po.PostPO">
+        select * from post_sheet;
+    </select>
+
+    <select id="findPostById" resultType="com.nju.edu.erp.model.po.PostPO">
+        select * from post_sheet where `id` = #{id};
+    </select>
+
+    <select id="getNameById" resultType="String">
+        select name from post_sheet where id = #{id};
+    </select>
+
+    <select id="getPostTypeById" resultType="com.nju.edu.erp.enums.PostType">
+        select type from post_sheet where id = #{id};
+    </select>
+
+    <insert id="createPost" parameterType="PostPO">
+        insert into post_sheet(`name`, `basic_wage`, `post_wage`, `type`)
+        values (#{name}, #{basicWage}, #{postWage}, #{type});
+    </insert>
+
+    <delete id="deletePostById" parameterType="Integer">
+        delete from post_sheet where `id` = #{id} and `id` not in (select post_id from employee_sheet);
+    </delete>
+
+    <update id="updatePost" parameterType="PostPO">
+        update post_sheet
+        <set>
+            <if test = "name != null">`name` = #{name}, </if>
+            <if test = "basicWage != null">`basic_wage` = #{basicWage}, </if>
+            <if test = "postWage != null">`post_wage` = #{postWage}, </if>
+            <if test = "type != null">`type` = #{type}, </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <resultMap id="PostPO" type="com.nju.edu.erp.model.po.PostPO">
+        <id column="id" property="id"></id>
+        <result column="name" property="name"></result>
+        <result column="basic_wage" property="basicWage"></result>
+        <result column="post_wage" property="postWage"></result>
+        <result column="type" property="type"></result>
+    </resultMap>
+</mapper>
